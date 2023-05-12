@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/128/3068/3068327.png">
+  <title>HuyKhac Shop</title>
+    <link rel="stylesheet" href="/css/root.css">
+    <link rel="stylesheet" href="/css/dashboard2.css">
+  <link rel="stylesheet" href="/fonts/css/all.min.css">
+  <link rel="stylesheet" href="/css/createProduct.css">
+    <!-- datatable -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/dt/dt-1.12.1/rg-1.2.0/datatables.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/searchpanes/2.0.1/css/searchPanes.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Toastify alert -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+
+    <!-- css -->
+    <link rel="stylesheet" href="/css/dataTables.css">
+</head>
+
+<body style="position: relative;">
+
+    <nav>
+        <div style="height: 71px;">
+            <h3 style="padding: 10px;">Khắc Huy Shop</h3>
+        </div>
+        <div class="nav-item" style="border-top: 1px solid #ccc;border-bottom: none;">
+            <ul id="route"></ul>
+        </div>
+    </nav>
+
+    <main style="height: 100%;">
+        <div style="display: flex;justify-content: space-between; height: 70px;">
+            <div>
+                <h3 id="page" style="margin: auto 0;padding: 10px;">Tiêu đề trang</h3>
+            </div>
+            <div style="margin-right: 40px;display: flex;">
+                <div class="col-md-0 text-end">
+                    <div class="dropdown text-end">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://4.bp.blogspot.com/-6elQkFTR8gM/V_YKmIlnp5I/AAAAAAAAEZ8/AS_B3lRU2K4h3pjmV_j-nCMZ8dz5kY2gQCLcB/s200/student-avatar.png"
+                                alt="mdo" width="32" height="32" class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                            <li><a class="custom-dropdown-item dropdown-item " href="/user/getMe"><i
+                                        style=" margin-right:5px" class="fa-solid fa-user"></i> Thông Tin cá nhân</a>
+                            </li>
+                            <li><a class="custom-dropdown-item dropdown-item" href="/order/myorder"><i
+                                        style=" margin-right:5px" class="fa-solid fa-cart-shopping"></i> Đơn Hàng</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="custom-dropdown-item dropdown-item" href="/auth/logout"><i
+                                        style=" margin-right:5px" class="fa-solid fa-right-from-bracket"></i> Đăng
+                                    xuất</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="containerBox main-item" style="border-bottom: none;">
+            <div>
+                <button class="btn btn-success btn-addVoucher"
+                    style="width: auto;position: absolute; right: 22%; cursor: pointer;z-index: 1;"
+                    data-bs-toggle="modal" data-bs-target="#exampleModalAddVoucher">Thêm
+                    FlashSale</button>
+                <table id="myTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên Flash sale</th>
+                            <th>Mô tả Flash sale</th>
+                            <th>Tên Sách</th>
+                            <th>Chiết khấu</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày hết hạn</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+    <div class="modal fade" id="exampleModalDelete" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <form action="" id="handleSubmitDelete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Xoá FlashSale</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Bạn có muốn xoá FlashSale này không?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="btn-delete-success" class="btn btn-danger">Xoá</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="exampleModalUpdate" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cập nhật FlashSale</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="handleSubmitFormUpdate">
+
+                    <div class="modal-body">
+                        <div style="margin-bottom: 16px;">
+                            <label for="nameVoucher" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Tên
+                                FlashSale<strong style="color: red;">*</strong></label>
+                            <input id="nameVoucher" style="width: 100%;" type="text" name="name" required>
+
+                            <label for="discountAmount" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Chiết khấu</label>
+                            <input id="discountAmount" style="width: 100%;" name="discountAmount" type="number">
+
+                            <label for="description" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Mô tả<strong
+                                    style="color: red;">*</strong></label>
+                            <input id="description" name="description" style="width: 100%;" type="text" required>
+
+                            <label for="expireDate" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Ngày bắt
+                                đầu<strong style="color: red;">*</strong></label>
+                            <input id="expireDate" name="startDate" style="width: 100%;" type="datetime-local" required>
+
+                            <label for="expireDate2" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Ngày kết
+                                thúc<strong style="color: red;">*</strong></label>
+                            <input id="expireDate2" name="endDate" style="width: 100%;" type="datetime-local" required>
+
+                            <label for="productId" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Tên sách</label>
+
+                            <select name="productId" id="productId" multiple class="productOption">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="btn-update-success" class="btn btn-primary">Cập nhật</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalAddVoucher" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm FlashSale</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="handleSubmitFormAdd">
+
+                    <div class="modal-body">
+                        <div style="margin-bottom: 16px;">
+                            <label for="nameVoucher" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Tên
+                                FlashSale<strong style="color: red;">*</strong></label>
+                            <input id="nameVoucher" style="width: 100%;" type="text" name="name" required>
+
+                            <label for="discountAmount" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Chiết khấu<strong
+                                    style="color: red;">*</strong></label>
+                            <input id="discountAmount" style="width: 100%;" name="discountAmount" type="number" min="0"
+                                step="0.01" required>
+
+                            <label for="quantity" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Mô tả<strong
+                                    style="color: red;">*</strong></label>
+                            <input id="quantity" name="description" style="width: 100%;" type="text" required>
+
+                            <label for="expireDate" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Ngày bắt
+                                đầu<strong style="color: red;">*</strong></label>
+                            <div>
+                                <input id="expireDate" name="startDate" style="width: 100%;" type="datetime-local"
+                                    required>
+                            </div>
+
+                            <label for="expireDate2" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Ngày kết
+                                thúc<strong style="color: red;">*</strong></label>
+                            <div>
+                                <input id="expireDate2" name="endDate" style="width: 100%;" type="datetime-local"
+                                    required>
+                            </div>
+
+                            <label for="productId" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Tên sách<strong
+                                    style="color: red;">*</strong></label>
+
+                            <select name="productId" id="productId" class="productOption" multiple>
+                                <option value="3f36bded-ebfc-45e1-b5df-adcd3671e559">
+                                    3f36bded-ebfc-45e1-b5df-adcd3671e559</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Thêm FlashSale</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/js/route.js"></script>
+<script>
+    let html = route.map((e, index) => {
+        const pathname = window.location.pathname;
+        if (e.href == pathname) {
+            return `<li class="active"><a href="${e.href}">${e.text}</a></li>`;
+        } else {
+            return `<li><a href="${e.href}">${e.text}</a></li>`;
+        }
+    });
+    $("#route")[0].innerHTML = html.join("");
+    $("#page").text($("#route>.active")[0].innerText)
+</script>
+<script>
+    let windowHeight = $(window).height();
+    $(".nav-item").css("min-height", windowHeight - 70 + "px");
+    $(".main-item").css("min-height", windowHeight - 70 + "px");  
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+<!-- datatables -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/rg-1.2.0/datatables.min.js"></script>
+<script type="text/javascript"
+    src="https://cdn.datatables.net/searchpanes/2.0.1/js/dataTables.searchPanes.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js"></script>
+<script type="text/javascript"
+    src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+<!-- toastify -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script>
+    $.ajax({
+        url: `/product/getProductNotFlashsale`,
+        type: "GET",
+        success: (response) => {
+            let listSelect = response?.data?.rows.map((item, index) => (`
+                                 <option value ="${item.id}">${item.name}</option>`
+            ))
+            $(".productOption").html(listSelect.join(""))
+        },
+        error: (data) => {
+            Toastify({
+                text: data.responseJSON.errorCode,
+                duration: 2000,
+                newWindow: true,
+                //close: true,
+                offset: {
+                    x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                    y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                },
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, red, red)",
+                    width: "250px",
+                    fontSize: "16px"
+                },
+            }).showToast();
+        }
+    })
+
+</script>
+<script>
+    $.ajax({
+        url: `/flashsale`,
+        type: "GET",
+        success: (response) => {
+            console.log(response)
+            let listSelect = response?.data?.rows.map((item, index) => {
+            let listPorduct =  item?.FlashSaleProducts.map((product, index) => {
+                return `<p style="margin-bottom:4px">${product?.Product?.name}</p>`
+            })
+                return `
+                    <tr data-id="${item.id}">
+                        <td style="text-align:center">${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.description}</td>
+                        <td>${listPorduct.join("")}</td>
+                        <td data-discount="${item.FlashSaleProducts[0].discountAmount}">${item.FlashSaleProducts[0].discountAmount.toLocaleString()}đ</td>
+                        <td>${item.startDate}</td>
+                        <td>${item.endDate}</td>
+                        <td style="max-width:120px;text-align:center">
+                            <button style="width:100px" type="button" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="btn  btn-update btn-primary">Cập nhật</button>
+                            <button style="width:100px;margin-top:4px" type="button" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#exampleModalDelete" class="btn btn-delete btn-danger">Xoá</button>
+                        </td>
+                    </tr>
+                `
+            })
+            $("#table-body")[0].innerHTML = listSelect.join("")
+            let table = $('#myTable').DataTable({
+                select: false,
+                pageLength: 5,
+                stateSave: true,
+                lengthMenu: [5, 10, 15, 20],
+                columnDefs: [
+                    {
+                        searchPanes: {
+                            show: true
+                        },
+                        targets: [1, 2, 3, 4]
+                    }
+                ],
+                "language": {
+                    "sEmptyTable": "Không có dữ liệu trong bảng",
+                    "sInfo": "Đang hiển thị từ _START_ đến _END_ trong tổng số _TOTAL_ kết quả",
+                    "sInfoEmpty": "Hiển thị từ 0 đến 0 trong tổng số 0 kết quả",
+                    "sInfoFiltered": "(được lọc từ tổng số _MAX_ kết quả)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ",",
+                    "sLengthMenu": "Hiển thị _MENU_ kết quả",
+                    "sLoadingRecords": "Đang tải...",
+                    "sProcessing": "Đang xử lý...",
+                    "sSearch": "Tìm kiếm:",
+                    "sZeroRecords": "Không tìm thấy kết quả phù hợp",
+                    "oPaginate": {
+                        "sFirst": "Đầu",
+                        "sLast": "Cuối",
+                        "sNext": "Tiếp",
+                        "sPrevious": "Trước"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": sắp xếp cột tăng dần",
+                        "sSortDescending": ": sắp xếp cột giảm dần"
+                    },
+                }
+            });
+
+        },
+        error: (data) => {
+            Toastify({
+                text: data.responseJSON.errorCode,
+                duration: 2000,
+                newWindow: true,
+                //close: true,
+                offset: {
+                    x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                    y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                },
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, red, red)",
+                    width: "250px",
+                    fontSize: "16px"
+                },
+            }).showToast();
+        }
+    })
+    let deleteId
+    $("#exampleModalDelete").on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget)
+        deleteId = button.data("id")
+    })
+
+    $("#handleSubmitDelete").submit(e => {
+        e.preventDefault();
+        $.ajax({
+            url: `/flashsale/${deleteId}`,
+            type: "DELETE",
+            success: (response) => {
+                Toastify({
+                    text: response.message,
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, green, green)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                }).showToast();
+                setTimeout(() => {
+                    $("#exampleModalDelete").modal("hide");
+                    location.reload();
+                }, "2000")
+            },
+            error: (data) => {
+                Toastify({
+                    text: data.responseJSON.errorCode,
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, red, red)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                    onClick: function () { } // Callback after click
+                }).showToast();
+            }
+        })
+
+    })
+
+    let updateId
+    $("#exampleModalUpdate").on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget)
+        updateId = button.data("id")
+
+        const element = $(`tr[data-id="${updateId}"]`).children()
+        $("#nameVoucher").val(element[1].innerText)
+        $("#discountAmount").val(element[3].getAttribute("data-discount"))
+        $("#description").val(element[2].innerText)
+
+        $("#quantity").val(element[3].innerText)
+        let datetimeValue = element[4].innerText.replace(" ", "T");
+        datetimeValue = datetimeValue.slice(0, -3);
+        $("#expireDate").val(datetimeValue)
+
+        let datetimeValue2 = element[5].innerText.replace(" ", "T");
+        datetimeValue2 = datetimeValue2.slice(0, -3);
+        $("#expireDate2").val(datetimeValue2)
+    })
+
+
+    $("#handleSubmitFormUpdate").submit(e => {
+        e.preventDefault();
+        const data = $("#handleSubmitFormUpdate").serialize();
+        $.ajax({
+            url: `/flashsale/${updateId}`,
+            type: "PATCH",
+            data: data,
+            success: (response) => {
+                Toastify({
+                    text: response.message,
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, green, green)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                }).showToast();
+                setTimeout(() => {
+                    $("#exampleModalUpdate").modal("hide");
+                    location.reload();
+                }, "2000")
+            },
+            error: (data) => {
+                Toastify({
+                    text: data.responseJSON.errorCode,
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, red, red)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                    onClick: function () { } // Callback after click
+                }).showToast();
+            }
+        })
+    })
+
+</script>
+
+<script>
+
+    $("#handleSubmitFormAdd").submit(e => {
+        e.preventDefault()
+        const data = $("#handleSubmitFormAdd").serialize();
+        console.log(data);
+        $.ajax({
+            url: `/flashsale/`,
+            type: "POST",
+            data: data,
+            success: (response) => {
+                Toastify({
+                    text: response.message,
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, green, green)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                }).showToast();
+                setTimeout(() => {
+                    $("#exampleModalUpdate").modal("hide");
+                    location.reload();
+                }, "2000")
+            },
+            error: (data) => {
+                Toastify({
+                    text: data.responseJSON.errorCode,
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, red, red)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                    onClick: function () { } // Callback after click
+                }).showToast();
+            }
+        })
+    })
+</script>
+
+</html>
+
+<script>
+
+</script>
