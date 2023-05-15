@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Bootstrap CSS -->
+  <!-- datatable -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/rg-1.2.0/datatables.min.css" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <!-- Chart.js -->
+  <link rel="stylesheet" href="/fonts/css/all.min.css">
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.1/dist/chart.min.js"></script>
+  <link rel="stylesheet" href="/css/dashboard2.css" />
+  <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/128/3068/3068327.png">
+  <title>HuyKhac Shop</title>
+
+</head>
+
+
+<body>
+  <nav>
+    <div style="height: 71px;">
+      <h3 style="padding: 10px;">Khắc Huy Shop</h3>
+    </div>
+    <div style="border-top: 1px solid #ccc;">
+      <ul id="route"></ul>
+    </div>
+  </nav>
+
+  <main style="height: 100%;">
+    <div style="display: flex;justify-content: space-between; height: 70px;">
+      <div>
+        <h3 id="page" style="margin: auto 0;padding: 10px;">Tiêu đề trang</h3>
+      </div>
+      <div style="margin-right: 40px;display: flex;">
+        <div class="col-md-0 text-end">
+          <div class="dropdown text-end">
+            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <img
+                src="https://4.bp.blogspot.com/-6elQkFTR8gM/V_YKmIlnp5I/AAAAAAAAEZ8/AS_B3lRU2K4h3pjmV_j-nCMZ8dz5kY2gQCLcB/s200/student-avatar.png"
+                alt="mdo" width="32" height="32" class="rounded-circle">
+            </a>
+            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+              <li><a class="custom-dropdown-item dropdown-item " href="/user/getMe"><i style=" margin-right:5px"
+                    class="fa-solid fa-user"></i> Thông Tin cá nhân</a>
+              </li>
+              <li><a class="custom-dropdown-item dropdown-item" href="/order/myorder"><i style=" margin-right:5px"
+                    class="fa-solid fa-cart-shopping"></i> Đơn Hàng</a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="custom-dropdown-item dropdown-item" href="/auth/logout"><i style=" margin-right:5px"
+                    class="fa-solid fa-right-from-bracket"></i> Đăng
+                  xuất</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="containerBox">
+      <div class="row mt-4" style="margin-left: 0; margin-right: 0">
+        <div class="col-md-4" style="padding-left: 0">
+          <div class="card text-center">
+            <div class="card-header">Tổng doanh thu/ tháng</div>
+            <div class="card-body">
+              <h3 id="total-money">0</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center">
+            <div class="card-header">Số lượng sách/ tháng</div>
+            <div class="card-body">
+              <h3 id="total-order">0</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 d-flex" style="height: 30px;margin-top: 4px;">
+          <p>Thống kê tháng</p>
+          <input style="margin-left: 4px;" type="number" min="1" max="12" name="numberMonth" id="getdate">
+        </div>
+      </div>
+
+      <div style="max-width: 90%">
+        <div>
+          <div class="card">
+            <div class="card-body">
+              <div id="idFake">
+                <canvas id="myChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/js/route.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/rg-1.2.0/datatables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.1/dist/chart.min.js"></script>
+<script>
+  let html = route.map((e, index) => {
+    const pathname = window.location.pathname;
+    if (e.href == pathname) {
+      return `<li class="active"><a href="${e.href}">${e.text}</a></li>`;
+    } else {
+      return `<li><a href="${e.href}">${e.text}</a></li>`;
+    }
+  });
+  $("#route")[0].innerHTML = html.join("");
+  $("#page").text($("#route>.active")[0].innerText)
+</script>
+<script>
+  const date = new Date();
+  $("#getdate").val(date.getMonth() + 1)
+  $.ajax({
+    url: `/order/dashboard?numberMonth=${date.getMonth() + 1}`,
+    type: "GET",
+    success: (response) => {
+      console.log(response);
+      let labels = [];
+      let dataSet = [];
+      data = response.data.map((e) => {
+        labels.push(e.Date);
+        dataSet.push(e.total_amount);
+        return e;
+      });
+      let ctx = document.getElementById("myChart").getContext("2d");
+      let myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Tổng số tiền mua",
+              data: dataSet,
+              backgroundColor: "rgb(105, 192, 233)",
+              borderColor: "rgb(105, 192, 233)",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: `Biểu đồ doanh thu Tháng ${date.getMonth() + 1}`,
+              font: {
+                size: 18,
+              },
+            },
+          },
+        },
+      });
+      $("#total-money").html(
+        response?.orderTotal[0]?.total_amount_by_month.toLocaleString() +
+        " đ"
+      );
+      $("#total-order").html(
+        response?.orderQuantity[0]?.OrderDetails[0]?.total_quantity
+      );
+    },
+    error: (response) => { },
+  });
+</script>
+
+<script>
+  $("#getdate").change(e => {
+    let date = $("#getdate").val()
+    if(date <= 0 || date >=13 ){
+      if(date <=0){
+        $("#getdate").val(1)
+      }else{
+        $("#getdate").val(12)
+      }
+    }
+
+    date = $("#getdate").val();
+    $.ajax({
+      url: `/order/dashboard?numberMonth=${date}`,
+      type: "GET",
+      success: (response) => {   
+      $("#idFake").html("<canvas id='myChart'></canvas>")
+        console.log(response);
+        let labels = [];
+        let dataSet = [];
+        data = response.data.map((e) => {
+          labels.push(e.Date);
+          dataSet.push(e.total_amount);
+          return e;
+        });
+        let ctx = document.getElementById("myChart").getContext("2d");
+
+        const myChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Tổng số tiền mua",
+                data: dataSet,
+                backgroundColor: "rgb(105, 192, 233)",
+                borderColor: "rgb(105, 192, 233)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: `Biểu đồ doanh thu Tháng ${date}`,
+                font: {
+                  size: 18,
+                },
+              },
+            },
+          },
+        });
+        let totalMoney = response?.orderTotal[0]?.total_amount_by_month?.toLocaleString() || 0;
+        let totalOrder = response?.orderQuantity[0]?.OrderDetails[0]?.total_quantity || 0;
+        $("#total-money").html(
+          totalMoney +
+          " đ"
+        );
+        $("#total-order").html(
+          totalOrder
+        );
+      },
+      error: (response) => { },
+    });
+
+  })
+</script>
+
+</html>

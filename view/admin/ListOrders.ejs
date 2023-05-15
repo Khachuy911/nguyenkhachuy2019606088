@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/128/3068/3068327.png">
+  <title>HuyKhac Shop</title>
+  <link rel="stylesheet" href="/css/root.css" />
+  <link rel="stylesheet" href="/css/dashboard2.css" />
+  <link rel="stylesheet" href="/fonts/css/all.min.css">
+  <link rel="stylesheet" href="/css/createProduct.css" />
+  <!-- datatable -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/rg-1.2.0/datatables.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/searchpanes/2.0.1/css/searchPanes.dataTables.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <!-- Toastify alert -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+
+  <!-- css -->
+  <link rel="stylesheet" href="/css/dataTables.css" />
+</head>
+
+<body>
+  <nav>
+    <div style="height: 71px;">
+      <h3 style="padding: 10px;">Khắc Huy Shop</h3>
+    </div>
+    <div class="nav-item" style="border-top: 1px solid #ccc;border-bottom: none;">
+      <ul id="route"></ul>
+    </div>
+  </nav>
+
+  <main style="height: 100%;">
+    <div style="display: flex;justify-content: space-between; height: 70px;">
+      <div>
+        <h3 id="page" style="margin: auto 0;padding: 10px;">Tiêu đề trang</h3>
+      </div>
+      <div style="margin-right: 40px;display: flex;">
+        <div class="col-md-0 text-end">
+          <div class="dropdown text-end">
+            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <img
+                src="https://4.bp.blogspot.com/-6elQkFTR8gM/V_YKmIlnp5I/AAAAAAAAEZ8/AS_B3lRU2K4h3pjmV_j-nCMZ8dz5kY2gQCLcB/s200/student-avatar.png"
+                alt="mdo" width="32" height="32" class="rounded-circle">
+            </a>
+            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+              <li><a class="custom-dropdown-item dropdown-item " href="/user/getMe"><i style=" margin-right:5px"
+                    class="fa-solid fa-user"></i> Thông Tin cá nhân</a>
+              </li>
+              <li><a class="custom-dropdown-item dropdown-item" href="/order/myorder"><i style=" margin-right:5px"
+                    class="fa-solid fa-cart-shopping"></i> Đơn Hàng</a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="custom-dropdown-item dropdown-item" href="/auth/logout"><i style=" margin-right:5px"
+                    class="fa-solid fa-right-from-bracket"></i> Đăng
+                  xuất</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="containerBox main-item" style="border-bottom: none;">
+      <div>
+        <table id="myTable">
+          <thead>
+            <tr>
+              <th>Mã đơn</th>
+              <th>Người đặt</th>
+              <th>Thành tiền</th>
+              <th>Địa chỉ</th>
+              <th>Số điện thoại</th>
+              <th>Chi tiết đơn</th>
+              <th>Thời gian đặt</th>
+              <th>Phương thức</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+  <div class="modal fade" id="exampleModalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xoá đơn hàng</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">Bạn có muốn xoá đơn hàng này không?</div>
+        <div class="modal-footer">
+          <button type="button" id="btn-delete-success" class="btn btn-danger">
+            Xoá
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="exampleModalUpdate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xác nhận đơn hàng</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modal-xacnhan">Bạn có muốn xác nhận đơn hàng này không?</div>
+        <div class="modal-footer">
+          <button type="button" id="btn-update" class="btn btn-primary">
+            Xác nhận
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/js/route.js"></script>
+<script>
+  let html = route.map((e, index) => {
+    const pathname = window.location.pathname;
+    if (e.href == pathname) {
+      return `<li class="active"><a href="${e.href}">${e.text}</a></li>`;
+    } else {
+      return `<li><a href="${e.href}">${e.text}</a></li>`;
+    }
+  });
+  $("#route")[0].innerHTML = html.join("");
+  $("#page").text($("#route>.active")[0].innerText)
+</script>
+<script>
+  let windowHeight = $(window).height();
+  $(".nav-item").css("min-height", windowHeight - 70 + "px");
+  $(".main-item").css("min-height", windowHeight - 70 + "px");  
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- datatables -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/rg-1.2.0/datatables.min.js"></script>
+<script type="text/javascript"
+  src="https://cdn.datatables.net/searchpanes/2.0.1/js/dataTables.searchPanes.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js"></script>
+<script type="text/javascript"
+  src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<!-- toastify -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script>
+  $.ajax({
+    url: `/order`,
+    type: "GET",
+    success: (response) => {
+      console.log(response);
+      let listSelect = response?.data?.rows.map((item, index) => {
+
+        const OrderDetails = item.OrderDetails.map(e => (`${e.Product.name} x${e.quantity}<br>`))
+
+        let statusCode = item.orderStatus;
+        let status = "Chờ xác nhận";
+        let color = 'text-primary'
+        let td = `<button type="button" data-id="${item.id}" data-statusCode="${statusCode}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="mt-1 btn btn-primary" style="width: 110px;">Xác nhận</button>
+        <button type="button" data-id="${item.id}" data-bs-toggle="modal" data-cancel = "true" data-statusCode="${statusCode}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="mt-1 btn btn-danger"style="width: 110px;">Huỷ đơn</button>`;
+        if (statusCode === 1) {
+          status = "Chờ giao hàng";
+          td = `
+          <button type="button" data-id="${item.id}" data-statusCode="${statusCode}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="mt-1 btn btn-warning"style="width: 110px;">Giao hàng</button> 
+          <button type="button" data-id="${item.id}" data-bs-toggle="modal" data-In = "true" data-statusCode="${statusCode}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="mt-1 btn btn-success"style="width: 110px;">In hoá đơn</button>
+                `;
+          color = 'text-info'
+
+        } else if (statusCode === 2) {
+          status = "Đang giao hàng";
+          td = `<button type="button" data-id="${item.id}" data-statusCode="${statusCode}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="mt-1 btn btn-warning"style="width: 110px;">Đã giao</button> 
+          <button type="button" data-id="${item.id}" data-bs-toggle="modal" data-In = "true" data-statusCode="${statusCode}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="mt-1 btn btn-success"style="width: 110px;">In hoá đơn</button>`;
+          color = 'text-info'
+
+        } else if (statusCode === 3) {
+          status = "Đã giao";
+          color = 'text-info'
+          td = ` 
+          <button type="button" data-id="${item.id}" data-statusCode="${statusCode}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="mt-1 btn btn-primary"style="width: 110px;">Hoàn thành</button>
+          <button type="button" data-id="${item.id}" data-bs-toggle="modal" data-In = "true" data-statusCode="${statusCode}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="mt-1 btn btn-success"style="width: 110px;">In hoá đơn</button>`;
+        } else if (statusCode === 4) {
+          status = "Hoàn thành";
+          color = 'text-success'
+          td = `<button type="button" data-id="${item.id}" data-bs-toggle="modal" data-In = "true" data-statusCode="${statusCode}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="mt-1 btn btn-success"style="width: 110px;">In hoá đơn</button>`;
+        }
+        else if (statusCode === 5) {
+          status = "Huỷ đơn";
+          color = 'text-danger'
+          td = `<button type="button" data-id="${item.id}" data-bs-toggle="modal" data-In = "true" data-statusCode="${statusCode}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="mt-1 btn btn-success"style="width: 110px;">In hoá đơn</button>`;
+        }
+        return `
+                                 <tr>
+                                    <td style="text-align:center">${item.orderCode}</td>
+                                    <td style="max-width:200px">${item.User.email}</td>
+                                    <td>${item.totalPrice.toLocaleString()}đ</td>
+                                    <td>${item.address}</td>
+                                    <td>${item.phone}</td>
+                                    <td>${OrderDetails.join("")}</td>                                    
+                                    <td>${item.createdAt}</td>
+                                    <td>${item.payment === 1 ? "Offline" : "Online"}</td>
+                                    <td class="${color}" style="text-align:center">${status}</td>
+                                    <td style="max-width:120px;text-align:center">
+                                        ${td}
+                                    </td>
+                                </tr>`;
+      });
+      $("#table-body")[0].innerHTML = listSelect.join("");
+      let table = $("#myTable").DataTable({
+        select: false,
+        pageLength: 5,
+        stateSave: true,
+        lengthMenu: [5, 10, 15, 20],
+        columnDefs: [
+          {
+            searchPanes: {
+              show: true,
+            },
+            targets: [0, 6, 7, 8],
+          },
+          {
+            searchPanes: {
+              show: false,
+            },
+            targets: [1, 2, 3, 4, 5, 9],
+          },
+        ],
+        language: {
+          sEmptyTable: "Không có dữ liệu trong bảng",
+          sInfo:
+            "Đang hiển thị từ _START_ đến _END_ trong tổng số _TOTAL_ kết quả",
+          sInfoEmpty: "Hiển thị từ 0 đến 0 trong tổng số 0 kết quả",
+          sInfoFiltered: "(được lọc từ tổng số _MAX_ kết quả)",
+          sInfoPostFix: "",
+          sInfoThousands: ",",
+          sLengthMenu: "Hiển thị _MENU_ kết quả",
+          sLoadingRecords: "Đang tải...",
+          sProcessing: "Đang xử lý...",
+          sSearch: "Tìm kiếm:",
+          sZeroRecords: "Không tìm thấy kết quả phù hợp",
+          oPaginate: {
+            sFirst: "Đầu",
+            sLast: "Cuối",
+            sNext: "Tiếp",
+            sPrevious: "Trước",
+          },
+          oAria: {
+            sSortAscending: ": sắp xếp cột tăng dần",
+            sSortDescending: ": sắp xếp cột giảm dần",
+          },
+        },
+      });
+
+      new $.fn.dataTable.SearchPanes(table, {});
+      table.searchPanes.container().prependTo(table.table().container());
+      table.searchPanes.resizePanes();
+      try {
+        $(".dtsp-collapseAll")[0].click();
+      } catch (error) { }
+    },
+    error: (data) => {
+      Toastify({
+        text: data.responseJSON.errorCode,
+        duration: 2000,
+        newWindow: true,
+        //close: true,
+        offset: {
+          x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+          y: 10, // vertical axis - can be a number or a string indicating unity. eg: '2em'
+        },
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: "linear-gradient(to right, red, red)",
+          width: "250px",
+          fontSize: "16px",
+        },
+      }).showToast();
+    },
+  });
+  let deleteId;
+  $("#exampleModalDelete").on("show.bs.modal", function (event) {
+    const button = $(event.relatedTarget);
+    deleteId = button.data("id");
+  });
+
+  $("#btn-delete-success").click((e) => {
+    e.preventDefault();
+    $.ajax({
+      url: `/user/${deleteId}`,
+      type: "DELETE",
+      success: (response) => {
+        Toastify({
+          text: response.message,
+          duration: 2000,
+          newWindow: true,
+          //close: true,
+          offset: {
+            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+            y: 10, // vertical axis - can be a number or a string indicating unity. eg: '2em'
+          },
+          gravity: "top", // `top` or `bottom`
+          position: "right", // `left`, `center` or `right`
+          stopOnFocus: true, // Prevents dismissing of toast on hover
+          style: {
+            background: "linear-gradient(to right, green, green)",
+            width: "250px",
+            fontSize: "16px",
+          },
+        }).showToast();
+        setTimeout(() => {
+          $("#exampleModalDelete").modal("hide");
+          location.reload();
+        }, "2000");
+      },
+      error: (data) => {
+        Toastify({
+          text: data.responseJSON.errorCode,
+          duration: 2000,
+          newWindow: true,
+          //close: true,
+          offset: {
+            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+            y: 10, // vertical axis - can be a number or a string indicating unity. eg: '2em'
+          },
+          gravity: "top", // `top` or `bottom`
+          position: "right", // `left`, `center` or `right`
+          stopOnFocus: true, // Prevents dismissing of toast on hover
+          style: {
+            background: "linear-gradient(to right, red, red)",
+            width: "250px",
+            fontSize: "16px",
+          },
+          onClick: function () { }, // Callback after click
+        }).showToast();
+      },
+    });
+  });
+</script>
+
+<script>
+  let idUpdate;
+  let urlOrder;
+  let type = "PATCH"
+  $("#exampleModalUpdate").on("show.bs.modal", (e) => {
+    const button = $(e.relatedTarget);
+    idUpdate = button.data("id");
+    const dataIn = button.attr("data-In")
+    let statusOrder = button.attr("data-statusCode");
+    if (dataIn) {
+      $("#modal-xacnhan").html("Bạn có muốn in hoá đơn cho đơn hàng này hay không?")
+      $("#exampleModalUpdate #exampleModalLabel").html("Xác nhận in đơn hàng")
+      urlOrder = "exportData"
+      type = "GET"
+    }
+    else if (statusOrder == 0) {
+      const dataCancel = button.attr("data-cancel")
+      if (dataCancel) {
+        $("#modal-xacnhan").html("Bạn có muốn huỷ bỏ đơn hàng này hay không ?")
+        urlOrder = "cancel"
+        type = "DELETE"
+      }
+      else {
+        $("#modal-xacnhan").html("Bạn có muốn xác nhận đơn hàng này hay không ?")
+        urlOrder = "confirm"
+      }
+    }
+    else if (statusOrder == 1) {
+      $("#modal-xacnhan").html("Bạn muốn cập nhật trạng thái cho đơn hàng này ?")
+      urlOrder = "shipping"
+    }
+    else if (statusOrder == 2) {
+      urlOrder = "delivere"
+      $("#modal-xacnhan").html("Bạn muốn cập nhật trạng thái cho đơn hàng này ?")
+    }
+    else if (statusOrder == 3) {
+      urlOrder = "done"
+      $("#modal-xacnhan").html("Bạn muốn cập nhật trạng thái cho đơn hàng này ?")
+    }
+  })
+
+  $("#btn-update").click(e => {
+    e.preventDefault();
+
+    $.ajax({
+      url: `/order/${urlOrder}/${idUpdate}`,
+      type: type,
+      success: (response) => {
+        Toastify({
+          text: "Cập nhật trạng thái thành công",
+          duration: 2000,
+          newWindow: true,
+          //close: true,
+          offset: {
+            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+            y: 10, // vertical axis - can be a number or a string indicating unity. eg: '2em'
+          },
+          gravity: "top", // `top` or `bottom`
+          position: "right", // `left`, `center` or `right`
+          stopOnFocus: true, // Prevents dismissing of toast on hover
+          style: {
+            background: "linear-gradient(to right, green, green)",
+            width: "250px",
+            fontSize: "16px",
+          },
+        }).showToast();
+        if (response.value) {
+          $("#exampleModalUpdate").modal("hide");
+          window.open(response.value, "_blank");
+          location.reload();
+        }
+        else {
+          setTimeout(() => {
+            $("#exampleModalUpdate").modal("hide");
+            location.reload();
+          }, "2000");
+        }
+
+      },
+      error: (data) => {
+        let text = data.statusText || data.responseJSON.errorCode
+        Toastify({
+          text: text,
+          duration: 2000,
+          newWindow: true,
+          //close: true,
+          offset: {
+            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+            y: 10, // vertical axis - can be a number or a string indicating unity. eg: '2em'
+          },
+          gravity: "top", // `top` or `bottom`
+          position: "right", // `left`, `center` or `right`
+          stopOnFocus: true, // Prevents dismissing of toast on hover
+          style: {
+            background: "linear-gradient(to right, red, red)",
+            width: "250px",
+            fontSize: "16px",
+          },
+          onClick: function () { }, // Callback after click
+        }).showToast();
+      },
+    });
+  })
+</script>
+
+</html>

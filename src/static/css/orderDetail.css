@@ -1,0 +1,32 @@
+body {
+  /* background-color: ; */
+  font-family: "Roboto Slab", serif;
+  /* font-family: 'Roboto Mono', monospace; */
+  /* font-family: 'Noto Serif', serif; */
+}
+
+/* HEAD */
+
+/* ======================== */
+/* SECTION */
+
+
+.section {
+  background-color: white;
+  text-align: center;
+  padding: 50px;
+}
+
+.order-infor {
+  display: flex;
+  text-align: left;
+  justify-content: space-around;
+}
+
+.order-user {
+  flex-basis: 50%;
+}
+
+.order-book {
+  text-align: left;
+}

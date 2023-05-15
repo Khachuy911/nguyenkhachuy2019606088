@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/128/3068/3068327.png">
+    <title>HuyKhac Shop</title>
+    <link rel="stylesheet" href="/css/root.css">
+    <link rel="stylesheet" href="/css/dashboard2.css">
+  <link rel="stylesheet" href="/fonts/css/all.min.css">
+  <link rel="stylesheet" href="/css/createProduct.css">
+    <!-- datatable -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/dt/dt-1.12.1/rg-1.2.0/datatables.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/searchpanes/2.0.1/css/searchPanes.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Toastify alert -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+
+    <!-- css -->
+    <link rel="stylesheet" href="/css/dataTables.css">
+</head>
+
+<body>
+    <nav>
+        <div style="height: 71px;">
+            <h3 style="padding: 10px;">Khắc Huy Shop</h3>
+        </div>
+        <div class="nav-item" style="border-top: 1px solid #ccc;border-bottom: none;">
+            <ul id="route"></ul>
+        </div>
+    </nav>
+
+    <main style="height: 100%;">
+        <div style="display: flex;justify-content: space-between; height: 70px;">
+            <div>
+                <h3 id="page" style="margin: auto 0;padding: 10px;">Tiêu đề trang</h3>
+            </div>
+            <div style="margin-right: 40px;display: flex;">
+                <div class="col-md-0 text-end">
+                    <div class="dropdown text-end">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://4.bp.blogspot.com/-6elQkFTR8gM/V_YKmIlnp5I/AAAAAAAAEZ8/AS_B3lRU2K4h3pjmV_j-nCMZ8dz5kY2gQCLcB/s200/student-avatar.png"
+                                alt="mdo" width="32" height="32" class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                            <li><a class="custom-dropdown-item dropdown-item " href="/user/getMe"><i
+                                        style=" margin-right:5px" class="fa-solid fa-user"></i> Thông Tin cá nhân</a>
+                            </li>
+                            <li><a class="custom-dropdown-item dropdown-item" href="/order/myorder"><i
+                                        style=" margin-right:5px" class="fa-solid fa-cart-shopping"></i> Đơn Hàng</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="custom-dropdown-item dropdown-item" href="/auth/logout"><i
+                                        style=" margin-right:5px" class="fa-solid fa-right-from-bracket"></i> Đăng
+                                    xuất</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="containerBox main-item" style="border-bottom: none;">
+            <div>
+                <button class="btn btn-success btn-addVoucher"
+                    style="width: auto;position: absolute; right: 22%; cursor: pointer;z-index: 1;"
+                    data-bs-toggle="modal" data-bs-target="#exampleModalAddVoucher">Thêm
+                    Voucher</button>
+                <table id="myTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên voucher</th>
+                            <th>Chiết khấu</th>
+                            <th>Số lượng</th>
+                            <th>Mã voucher</th>
+                            <th>Ngày hết hạn</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+    <div class="modal fade" id="exampleModalDelete" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Xoá voucher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có muốn xoá voucher này không?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-delete-success" class="btn btn-danger">Xoá</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalUpdate" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cập nhật Voucher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="handleSubmitFormUpdate">
+
+                    <div class="modal-body">
+                        <div style="margin-bottom: 16px;">
+                            <label for="nameVoucher" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Tên
+                                Voucher<strong style="color: red;">*</strong></label>
+                            <input id="nameVoucher" style="width: 100%;" type="text" name="name" required>
+
+                            <label for="discountAmount" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Chiết khấu<strong
+                                    style="color: red;">*</strong></label>
+                            <input id="discountAmount" style="width: 100%;" name="discountAmount" type="number"
+                                required>
+
+                            <label for="quantity" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Số lượng<strong
+                                    style="color: red;">*</strong></label>
+                            <input id="quantity" name="quantity" style="width: 100%;" type="number" required>
+
+                            <label for="expireDate" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Ngày hết
+                                hạn<strong style="color: red;">*</strong></label>
+                            <input id="expireDate" name="expireDate" style="width: 100%;" type="datetime-local"
+                                required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="btn-update-success" class="btn btn-primary">Cập nhật</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalAddVoucher" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm Voucher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Xoá"></button>
+                </div>
+                <form id="handleSubmitFormAdd">
+
+                    <div class="modal-body">
+                        <div style="margin-bottom: 16px;">
+                            <label for="nameVoucher" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Tên
+                                Voucher<strong style="color: red;">*</strong></label>
+                            <input id="nameVoucher" style="width: 100%;" type="text" name="name" required>
+
+                            <label for="discountAmount" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Chiết khấu<strong
+                                    style="color: red;">*</strong></label>
+                            <input id="discountAmount" style="width: 100%;" name="discountAmount" type="number"
+                                required>
+
+                            <label for="quantity" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Số lượng<strong
+                                    style="color: red;">*</strong></label>
+                            <input id="quantity" name="quantity" style="width: 100%;" type="number" required>
+
+                            <label for="expireDate" class="mt-2"
+                                style="margin-bottom: 0;font-weight:500;color: rgba(0, 0, 0, 0.553);">Ngày hết
+                                hạn<strong style="color: red;">*</strong></label>
+                            <input id="expireDate" name="expireDate" style="width: 100%;" type="datetime-local"
+                                required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Thêm Voucher</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/js/route.js"></script>
+<script>
+    let html = route.map((e, index) => {
+        const pathname = window.location.pathname;
+        if (e.href == pathname) {
+            return `<li class="active"><a href="${e.href}">${e.text}</a></li>`;
+        } else {
+            return `<li><a href="${e.href}">${e.text}</a></li>`;
+        }
+    });
+    $("#route")[0].innerHTML = html.join("");
+    $("#page").text($("#route>.active")[0].innerText)
+</script>
+<script>
+    let windowHeight = $(window).height();
+    $(".nav-item").css("min-height", windowHeight - 70 + "px");
+    $(".main-item").css("min-height", windowHeight - 70 + "px");  
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+<!-- datatables -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/rg-1.2.0/datatables.min.js"></script>
+<script type="text/javascript"
+    src="https://cdn.datatables.net/searchpanes/2.0.1/js/dataTables.searchPanes.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js"></script>
+<script type="text/javascript"
+    src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+<!-- toastify -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+
+<script>
+    $.ajax({
+        url: `/voucher?api=1`,
+        type: "GET",
+        success: (response) => {
+            console.log(response)
+            let listSelect = response?.data?.rows.map((item, index) => (`
+                                 <tr data-id="${item.id}">
+                                    <td style="text-align:center">${index + 1}</td>
+                                    <td>${item?.name}</td>
+                                    <td data-discountAmount="${item?.discountAmount}">${item?.discountAmount.toLocaleString()}đ</td>
+                                    <td>${item?.quantity}</td>
+                                    <td>${item?.voucherCode}</td>
+                                    <td>${item?.expireDate}</td>
+                                    <td style="max-width:120px;text-align:center">
+                                        <button type="button" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate" class="btn  btn-update btn-primary">Cập nhật</button>
+                                        <button type="button" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#exampleModalDelete" class="btn btn-delete btn-danger">Xoá</button>
+                                    </td>
+                                </tr>`
+            ))
+            $("#table-body")[0].innerHTML = listSelect.join("")
+            let table = $('#myTable').DataTable({
+                select: false,
+                pageLength: 5,
+                stateSave: true,
+                lengthMenu: [5, 10, 15, 20],
+                columnDefs: [
+                    {
+                        searchPanes: {
+                            show: true
+                        },
+                        targets: [1, 2, 3, 5]
+                    }
+                ],
+                "language": {
+                    "sEmptyTable": "Không có dữ liệu trong bảng",
+                    "sInfo": "Đang hiển thị từ _START_ đến _END_ trong tổng số _TOTAL_ kết quả",
+                    "sInfoEmpty": "Hiển thị từ 0 đến 0 trong tổng số 0 kết quả",
+                    "sInfoFiltered": "(được lọc từ tổng số _MAX_ kết quả)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ",",
+                    "sLengthMenu": "Hiển thị _MENU_ kết quả",
+                    "sLoadingRecords": "Đang tải...",
+                    "sProcessing": "Đang xử lý...",
+                    "sSearch": "Tìm kiếm:",
+                    "sZeroRecords": "Không tìm thấy kết quả phù hợp",
+                    "oPaginate": {
+                        "sFirst": "Đầu",
+                        "sLast": "Cuối",
+                        "sNext": "Tiếp",
+                        "sPrevious": "Trước"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": sắp xếp cột tăng dần",
+                        "sSortDescending": ": sắp xếp cột giảm dần"
+                    },
+                }
+            });
+
+
+            try { $(".dtsp-collapseAll")[0].click() } catch (error) { }
+        },
+        error: (data) => {
+            Toastify({
+                text: data?.responseJSON?.errorCode,
+                duration: 2000,
+                newWindow: true,
+                //close: true,
+                offset: {
+                    x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                    y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                },
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, red, red)",
+                    width: "250px",
+                    fontSize: "16px"
+                },
+            }).showToast();
+        }
+    })
+
+    let idDelete;
+    $("#exampleModalDelete").on("show.bs.modal", function (event) {
+        const button = $(event.relatedTarget);
+        idDelete = button.data("id");
+    })
+
+
+    $("#btn-delete-success").click(e => {
+        e.preventDefault();
+        $.ajax({
+            url: `/voucher/${idDelete}`,
+            type: "DELETE",
+            success: (response) => {
+                Toastify({
+                    text: "Xoá thành công",
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, green, green)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                }).showToast();
+                setTimeout(() => {
+                    $("#exampleModalDelete").modal("hide");
+                    location.reload();
+                }, "1000")
+            },
+            error: (data) => {
+                Toastify({
+                    text: data?.responseJSON?.errorCode || "Xoá không thành công",
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, red, red)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                    onClick: function () { } // Callback after click
+                }).showToast();
+            }
+        })
+
+    })
+
+    let idUpdate;
+    $("#exampleModalUpdate").on("show.bs.modal", function (event) {
+        const button = $(event.relatedTarget);
+        idUpdate = button.data("id");
+
+        const element = $(`tr[data-id="${idUpdate}"]`).children()
+        $("#nameVoucher").val(element[1].innerText)
+        $("#discountAmount").val(element[2].getAttribute("data-discountAmount"))
+        $("#quantity").val(element[3].innerText)
+        let datetimeValue = element[5].innerText.replace(" ", "T");
+        datetimeValue = datetimeValue.slice(0, -3);
+        $("#expireDate").val(datetimeValue)
+
+    })
+
+
+    $("#handleSubmitFormUpdate").submit(e => {
+        e.preventDefault();
+        const data = $("#handleSubmitFormUpdate").serialize();
+        $.ajax({
+            url: `/voucher/${idUpdate}`,
+            type: "PATCH",
+            data: data,
+            success: (response) => {
+                Toastify({
+                    text: "Cập nhật thành công",
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axispl - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, green, green)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                }).showToast();
+                setTimeout(() => {
+                    $("#exampleModalUpdate").modal("hide");
+                    location.reload();
+                }, "1000")
+            },
+            error: (data) => {
+                Toastify({
+                    text: data?.responseJSON?.errorCode || "Cập nhật không thành công",
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, red, red)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                    onClick: function () { } // Callback after click
+                }).showToast();
+            }
+        })
+    })
+
+</script>
+
+<script>
+    $("#handleSubmitFormAdd").submit(e => {
+        e.preventDefault()
+        const data = $("#handleSubmitFormAdd").serialize();
+        console.log(data)
+        $.ajax({
+            url: `/voucher/`,
+            type: "POST",
+            data: data,
+            success: (response) => {
+                Toastify({
+                    text: "Thêm voucher thành công",
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, green, green)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                }).showToast();
+                setTimeout(() => {
+                    $("#exampleModalUpdate").modal("hide");
+                    location.reload();
+                }, "1000")
+            },
+            error: (data) => {
+                Toastify({
+                    text: data?.responseJSON?.errorCode,
+                    duration: 2000,
+                    newWindow: true,
+                    //close: true,
+                    offset: {
+                        x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                        y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, red, red)",
+                        width: "250px",
+                        fontSize: "16px"
+                    },
+                    onClick: function () { } // Callback after click
+                }).showToast();
+            }
+        })
+    })
+</script>
+
+</html>
