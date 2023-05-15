@@ -267,7 +267,7 @@ module.exports = {
     // const refreshToken = await jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
     //   expiresIn: process.env.JWT_EXPIRES_IN_REFRESH_TOKEN
     // });
-    res.cookie("token", token, { maxAge: 9000000, httpOnly: true });
+    res.cookie("token", token, { maxAge: 90000000, httpOnly: true });
 
     res.status(HTTP_CODE.SUCCESS).json({
       isSuccess: true,

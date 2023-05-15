@@ -82,7 +82,7 @@ module.exports = {
           required: false,
           where: {
             isDeleted: DEFAULT_VALUE.IS_NOT_DELETED,
-            isActive: 1
+            isActive: 1,
           },
           attributes: ["discountAmount", "isDeleted"],
 
@@ -97,7 +97,7 @@ module.exports = {
                 [Op.gte]: moment().format("YYYY-MM-DD HH:mm:ss"),
               },
               isDeleted: DEFAULT_VALUE.IS_NOT_DELETED,
-              isActive: 1
+              isActive: 1,
             },
             isDeleted: DEFAULT_VALUE.IS_NOT_DELETED,
             attributes: ["startDate", "endDate", "isDeleted"],
@@ -582,11 +582,11 @@ module.exports = {
         {
           model: OrderDetail,
           required: false,
-          where: { isDeleted: DEFAULT_VALUE.IS_NOT_DELETED },
+          // where: { isDeleted: DEFAULT_VALUE.IS_NOT_DELETED },
           include: {
             model: Product,
             required: false,
-            where: { isDeleted: DEFAULT_VALUE.IS_NOT_DELETED },
+            // where: { isDeleted: DEFAULT_VALUE.IS_NOT_DELETED },
           },
         },
         {

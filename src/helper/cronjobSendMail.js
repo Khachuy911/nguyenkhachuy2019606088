@@ -23,23 +23,35 @@ var task = cron.schedule(
     };
 
     const flashSale = await FlashSale.findAll(condition);
-    const conditionFlashsale = {
+
+    const conditionUpdate = {
       where: {
-        id: flashSale[0]?.dataValues?.id,
+        startDate: moment(),
         isDeleted: DEFAULT_VALUE.IS_NOT_DELETED,
       },
+      attributes: ["id", "name"],
     };
-    const dataFlashsale = {
-      isActive: 1,
-    };
-    await FlashSale.update(dataFlashsale, conditionFlashsale);
-    const conditionFlashsaleProduct = {
-      where: {
-        flashSaleId: flashSale[0]?.dataValues?.id,
-        isDeleted: DEFAULT_VALUE.IS_NOT_DELETED,
-      },
-    };
-    await FlashSaleProduct.update(dataFlashsale, conditionFlashsaleProduct);
+
+    const flashSaleUpdate = await FlashSale.findAll(conditionUpdate);
+    if (flashSaleUpdate.length > 0) {
+      const conditionFlashsale = {
+        where: {
+          id: flashSaleUpdate[0]?.dataValues?.id,
+          isDeleted: DEFAULT_VALUE.IS_NOT_DELETED,
+        },
+      };
+      const dataFlashsale = {
+        isActive: 1,
+      };
+      await FlashSale.update(dataFlashsale, conditionFlashsale);
+      const conditionFlashsaleProduct = {
+        where: {
+          flashSaleId: flashSaleUpdate[0]?.dataValues?.id,
+          isDeleted: DEFAULT_VALUE.IS_NOT_DELETED,
+        },
+      };
+      await FlashSaleProduct.update(dataFlashsale, conditionFlashsaleProduct);
+    }
 
     if (flashSale.length > 0) {
       const condition2 = {
